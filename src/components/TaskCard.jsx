@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { Edit2, Trash2 } from 'lucide-react';
 import { useProject } from '../context/ProjectContext';
+import { MultiSelect } from "react-multi-select-component";
 
 const TaskCard = ({ task, projectId, versionId, assignees }) => {
   const { updateTask, deleteTask, moveTask } = useProject();
   const [isEditing, setIsEditing] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
-  const [assigneeInput, setAssigneeInput] = useState(task.assignees.join(', '));
+  const [assigneeInput, setAssigneeInput] = useState([]);
+  const [assigneeOptions, setAssigneeOptions] = useState([]);
+
+  const populateAssigneeOptions = () => {
+    const options = assignees?.map(assignee => ({
+      label: assignee.name,
+      value: assignee.email
+    }));
+    setAssigneeOptions(options || []);
+  };
+
+  useEffect(()=>{
+    populateAssigneeOptions()
+  },[assignees])
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'TASK',
@@ -18,14 +32,10 @@ const TaskCard = ({ task, projectId, versionId, assignees }) => {
   }));
 
   const handleSave = () => {
-    const newAssignees = assigneeInput
-      .split(',')
-      .map(name => name.trim())
-      .filter(name => name.length > 0);
 
     const updatedTask = {
       ...editedTask,
-      assignees: newAssignees
+      assignees: assigneeInput.map((assignee) => assignee.value)
     };
     
     updateTask(projectId, versionId, updatedTask);
@@ -71,14 +81,19 @@ const TaskCard = ({ task, projectId, versionId, assignees }) => {
           <option value="medium">Medium</option>
           <option value="high">High</option>
         </select>
-        <input
-          type="text"
+
+        <MultiSelect
+          options={assigneeOptions}
           value={assigneeInput}
-          onChange={(e) => setAssigneeInput(e.target.value)}
-          placeholder="Enter assignees (comma-separated)"
-          className="w-full mb-2 px-2 py-1 border rounded"
+          onChange={setAssigneeInput}
+          labelledBy="Select"
+          className='py-0'
         />
-        <div className="flex justify-end gap-2">
+        <textarea
+          className="w-full mb-2 px-2 py-1 border rounded mt-2"
+          placeholder="Comment"
+        />
+        <div className="flex justify-end gap-2 mt-3">
           <button
             onClick={() => setIsEditing(false)}
             className="px-3 py-1 text-gray-600 hover:text-gray-800"
@@ -126,14 +141,14 @@ const TaskCard = ({ task, projectId, versionId, assignees }) => {
           {task.priority}
         </span>
       </div>
-      {task.assignees.length > 0 && (
+      {assigneeInput?.length > 0 && (
         <div className="flex flex-wrap gap-1 mb-2">
-          {task.assignees.map(assignee => (
+          {assigneeInput?.map((assignee,index) => (
             <span
-              key={assignee}
+              key={index}
               className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded"
             >
-              {assignee}
+              {assignee.label}
             </span>
           ))}
         </div>

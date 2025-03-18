@@ -107,8 +107,8 @@ export const ProjectProvider = ({ children }) => {
     }));
   };
 
-  const addAssignee = (name) => {
-    setAssignees(prev => [...prev, name]);
+  const addAssignee = (name,email,role) => {
+    setAssignees(prev => [...prev, {name,email,role}]);
   };
 
   return (

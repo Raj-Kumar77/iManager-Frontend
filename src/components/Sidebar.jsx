@@ -6,6 +6,8 @@ const Sidebar = ({ onSelectVersion }) => {
   const { projects, assignees, addProject, addVersion, addAssignee } = useProject();
   const [newProjectName, setNewProjectName] = useState('');
   const [newAssigneeName, setNewAssigneeName] = useState('');
+  const [newAssigneeEmail, setNewAssigneeEmail] = useState('');
+  const [newAssigneeRole, setNewAssigneeRole] = useState('user');
   const [expandedProject, setExpandedProject] = useState(null);
 
   const handleAddProject = (e) => {
@@ -25,8 +27,10 @@ const Sidebar = ({ onSelectVersion }) => {
   const handleAddAssignee = (e) => {
     e.preventDefault();
     if (newAssigneeName.trim()) {
-      addAssignee(newAssigneeName);
+      addAssignee(newAssigneeName,newAssigneeEmail,newAssigneeRole);
       setNewAssigneeName('');
+      setNewAssigneeRole('user');
+      setNewAssigneeEmail('');
     }
   };
 
@@ -89,20 +93,25 @@ const Sidebar = ({ onSelectVersion }) => {
       </div>
 
       <div className="border-t p-4">
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <h3 className="font-medium mb-2 flex items-center gap-2">
             <Users className="h-4 w-4" /> Assignees
           </h3>
           <div className="space-y-1">
-            {assignees.map(assignee => (
-              <div key={assignee} className="text-sm px-2 py-1 bg-gray-100 rounded">
-                {assignee}
+            {assignees.map((assignee,index) => (
+              <div key={index} className="text-sm px-2 py-1 bg-gray-100 rounded">
+                {assignee.name}
+                {assignee.email}
+                {assignee.role}
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <form onSubmit={handleAddAssignee}>
+          <h3 className="font-medium mb-2 flex items-center gap-2">
+            <Users className="h-4 w-4" /> Assignees
+          </h3>
           <input
             type="text"
             value={newAssigneeName}
@@ -110,11 +119,26 @@ const Sidebar = ({ onSelectVersion }) => {
             placeholder="New Assignee Name"
             className="w-full px-3 py-2 border rounded-md mb-2"
           />
+          <input
+            type="email"
+            value={newAssigneeEmail}
+            onChange={(e) => setNewAssigneeEmail(e.target.value)}
+            placeholder="New Assignee Email"
+            className="w-full px-3 py-2 border rounded-md mb-2"
+          />
+          <select
+            className="w-full px-3 py-2 border rounded-md mb-2"
+            onChange={(e)=>setNewAssigneeRole(e.target.value)}
+          >
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+          </select>
           <button
             type="submit"
             className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex items-center justify-center gap-2"
           >
-            <Plus className="h-4 w-4" /> Add Assignee
+            <Plus className="h-4 w-4" /> Invite Assignee
           </button>
         </form>
       </div>
