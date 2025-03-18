@@ -13,7 +13,7 @@ const Navbar = () => {
     <nav className="bg-white shadow-md h-16 flex items-center px-6">
       <div className="flex items-center gap-4 flex-1">
         <Menu className="h-6 w-6 text-gray-600" />
-        <h1 className="text-xl font-semibold text-gray-800">Project Management Dashboard</h1>
+        <h1 className="text-xl font-semibold text-gray-800">iManager</h1>
       </div>
       
       <div className="relative">
@@ -24,15 +24,15 @@ const Navbar = () => {
           <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center">
             <User className="h-5 w-5 text-white" />
           </div>
-          <span className="text-gray-700">John Doe</span>
+          <span className="text-gray-700">Sashi</span>
           <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isDropdownOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 border border-gray-200">
             <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900">John Doe</p>
-              <p className="text-sm text-gray-500">john@example.com</p>
+              <p className="text-sm font-medium text-gray-900">Sashi</p>
+              <p className="text-sm text-gray-500">sashi@example.com</p>
             </div>
             <button
               onClick={handleLogout}

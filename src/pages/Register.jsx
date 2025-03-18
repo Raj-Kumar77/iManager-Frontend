@@ -15,6 +15,58 @@ const Register = () => {
     const [subscription, setSubscription] = useState(selectedPlan.subscriptionType.toUpperCase())
     const [subscriptionPrice, setSubscriptionPrice] = useState(selectedPlan.subscriptionPrice)
 
+    useEffect(() => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.async = true;
+            document.body.appendChild(script);
+            return () => {
+            document.body.removeChild(script);
+            };
+        }, []);
+
+
+        const handleRegistrationSubmit = async (e) => {
+            e.preventDefault()
+    
+            try {
+    
+    
+                const response = await axios.post(backendUrl + `/api/v1/org/registration?amount=${subscriptionPrice}&currency=INR`, { name, email, password, subscription })
+    
+                const order = response.data
+    
+                if (!order.id) {
+                    toast.error("Error: no Order Id")
+                    return;
+                }
+    
+                const paymentDescription = `Subscription Plan: ${subscription}`;
+    
+                //Initiate Razorpay Order
+                const options = {
+                    key: "rzp_test_M5M2X3c0ahOpJl", // Replace with your Razorpay API Key
+                    amount: order.amount,
+                    currency: order.currency,
+                    name: "iManager",
+                    description: paymentDescription,
+                    order_id: order.id,
+                    handler: function (response) {
+                        toast.success(`Payment Successful for ${subscription}! Payment ID: ${response.razorpay_payment_id}`);
+                        navigate("/");
+                    },
+                    theme: {
+                        color: "#3399cc"
+                    },
+                };
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                console.log("Error: " + error);
+                alert("Payment Initiation failed");
+            }
+        }
+
     return (
         <section className="bg-gradient-to-r from-gray-800 to to-gray-900 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -32,7 +84,7 @@ const Register = () => {
                 <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                     <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <h1 className='bg-gradient-to-r from-orange-500 to-red-800 text-transparent bg-clip-text text-center font-bold text-3xl pb-1'>iManager</h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
+                        <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleRegistrationSubmit}>
                             <div>
                                 <label
                                     htmlFor="name"
