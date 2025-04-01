@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const ProjectContext = createContext();
@@ -6,6 +6,7 @@ const ProjectContext = createContext();
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [assignees, setAssignees] = useState([]);
+  const [token, setToken] = useState('')
 
   const addProject = (name) => {
     setProjects(prev => [...prev, { id: uuidv4(), name, versions: [] }]);
@@ -111,6 +112,12 @@ export const ProjectProvider = ({ children }) => {
     setAssignees(prev => [...prev, {name,email,role}]);
   };
 
+  useEffect(()=>{
+    if (!token && localStorage.getItem('loginToken')) { 
+      setToken(localStorage.getItem('loginToken'));
+    }
+  },[])
+
   return (
     <ProjectContext.Provider value={{
       projects,
@@ -121,7 +128,8 @@ export const ProjectProvider = ({ children }) => {
       updateTask,
       deleteTask,
       moveTask,
-      addAssignee
+      addAssignee,
+      token,
     }}>
       {children}
     </ProjectContext.Provider>

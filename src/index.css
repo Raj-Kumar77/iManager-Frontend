@@ -2,7 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
     font-family: "Poppins", sans-serif;
     color-scheme: dark;
-}
+} */
+
+
+/* Default color scheme */
+:root {
+    font-family: "Poppins", sans-serif;
+    color-scheme: light; /* Default to light theme */
+  }
+  
+  .page-dark {
+    color-scheme: dark;
+    --background-color: #121212;
+    --text-color: #ffffff;
+  }
+  
+  .page-light {
+    color-scheme: light;
+    --background-color: #ffffff;
+    --text-color: #000000;
+  }
+  
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  

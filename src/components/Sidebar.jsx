@@ -138,7 +138,7 @@ const Sidebar = ({ onSelectVersion }) => {
             type="submit"
             className="w-full bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex items-center justify-center gap-2"
           >
-            <Plus className="h-4 w-4" /> Invite Assignee
+            <Plus className="h-4 w-4" /> Add New Employee
           </button>
         </form>
       </div>
